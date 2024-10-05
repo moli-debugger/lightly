@@ -11,23 +11,6 @@ import torch.nn as nn
 from lightly.models._momentum import _MomentumEncoderMixin
 from lightly.models.modules import BYOLProjectionHead
 
-
-def _get_byol_mlp(num_ftrs: int, hidden_dim: int, out_dim: int):
-    """Returns a 2-layer MLP with batch norm on the hidden layer.
-
-    Reference (12.03.2021)
-    https://arxiv.org/abs/2006.07733
-
-    """
-    modules = [
-        nn.Linear(num_ftrs, hidden_dim),
-        nn.BatchNorm1d(hidden_dim),
-        nn.ReLU(),
-        nn.Linear(hidden_dim, out_dim),
-    ]
-    return nn.Sequential(*modules)
-
-
 class BYOL(nn.Module, _MomentumEncoderMixin):
     """Implementation of the BYOL architecture.
 
@@ -165,3 +148,19 @@ class BYOL(nn.Module, _MomentumEncoderMixin):
         p1, z0 = self._forward(x1, x0)
 
         return (z0, p0), (z1, p1)
+
+
+def _get_byol_mlp(num_ftrs: int, hidden_dim: int, out_dim: int):
+    """Returns a 2-layer MLP with batch norm on the hidden layer.
+
+    Reference (12.03.2021)
+    https://arxiv.org/abs/2006.07733
+
+    """
+    modules = [
+        nn.Linear(num_ftrs, hidden_dim),
+        nn.BatchNorm1d(hidden_dim),
+        nn.ReLU(),
+        nn.Linear(hidden_dim, out_dim),
+    ]
+    return nn.Sequential(*modules)
